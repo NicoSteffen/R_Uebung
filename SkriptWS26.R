@@ -83,7 +83,6 @@ lieblingspsychologinnen[-1]
 lieblingspsychologinnen[2]
 lieblingspsychologinnen[c(1,3)]
 
-
 mean(CFH) # Mittelwert
 sd(CFH) #Standardabweichung
 var(CFH) # Varianz
@@ -163,11 +162,6 @@ df[3, "Diagnose"] = "ADHS"
 df[3, "Diagnose"]
 
 # Statt über Positionen können wir Werte nach einer BEDINGUNG auswählen.
-#   ==  gleich           !=  ungleich
-#   >   größer           <   kleiner
-#   >=  größer gleich    <=  kleiner gleich
-#   &   UND (beide Bedingungen müssen stimmen)
-#   |   ODER (mindestens eine Bedingung muss stimmen)
 
 df$Alter > 30
 Alten = df[df$Alter > 30,]
