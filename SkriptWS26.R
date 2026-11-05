@@ -296,9 +296,9 @@ jpeg(file = "Unser_erstes_GGPLOT.jpg", width = 15,
      height = 10, units = "cm", res = 300)
 
 ggplot(data = bipolar, aes(x = groups, y = sum_YMRS, fill = groups)) +
-  geom_boxplot(width = 0.5, alpha = 0.6) +
+  geom_boxplot(width = 0.5, alpha = 0.6, fatten = NULL) +
   geom_jitter(width = 0.15, alpha = 0.5) +
-  stat_summary(fun = "mean", geom = "point", color = "black") +
+  stat_summary(fun = "mean", geom = "crossbar", width = 0.5, linewidth = 0.1, color = "black") +
   labs(x = "Gruppen", y = "YMRS", title = "Boxplot der YMRS Werte nach Gruppen") +
   theme_minimal() +
   scale_fill_manual(values = c("#61243F", "#D32D7D")) +
