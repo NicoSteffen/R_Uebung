@@ -254,6 +254,71 @@ t.test(sum_YMRS ~ groups, data = df, var.equal = TRUE, alternative = "less")
 ?t.test
 
 
+# Einheit 4 ---------------------------------------------------------------
+
+library(tidyverse)
+library(psych)
+library(ggplot2)
+
+bipolar = read_csv("bipolar.csv")
+rohdaten = read_csv("bipolar.csv")
+
+# names(bipolar)
+
+bipolar$sum_YMRS = rowSums(select(bipolar, starts_with("YMRS")))
+
+# Reverse Items: 1, 2, 7, 8, 11, 12 
+
+# summary(select(bipolar, starts_with("ISEL")))
+
+# bipolar$ISEL_1r = recode(bipolar$ISEL_1, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+
+# bipolar[, c("ISEL_1r", "ISEL_1")]
+
+bipolar$ISEL_1 = recode(bipolar$ISEL_1, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+bipolar$ISEL_2 = recode(bipolar$ISEL_2, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+bipolar$ISEL_7 = recode(bipolar$ISEL_7, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+bipolar$ISEL_8 = recode(bipolar$ISEL_8, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+bipolar$ISEL_11 = recode(bipolar$ISEL_11, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+bipolar$ISEL_12 = recode(bipolar$ISEL_12, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
+
+bipolar$mean_ISEL = rowMeans(select(bipolar, starts_with("ISEL")))
+
+
+saveRDS(bipolar, file = "bipolar_clean")
+
+t.test(sum_YMRS ~ groups, data = bipolar)
+
+#?ggplot2
+
+
+jpeg(file = "Unser_erstes_GGPLOT.jpg", width = 15, 
+     height = 10, units = "cm", res = 300)
+
+ggplot(data = bipolar, aes(x = groups, y = sum_YMRS, fill = groups)) +
+  geom_boxplot(width = 0.5, alpha = 0.6) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  stat_summary(fun = "mean", geom = "point", color = "black") +
+  labs(x = "Gruppen", y = "YMRS", title = "Boxplot der YMRS Werte nach Gruppen") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#61243F", "#D32D7D")) +
+  theme(legend.position = "right",
+        plot.title = element_text(hjust = 0.5, vjust = 1))
+
+dev.off()
+
+cor(bipolar$sum_YMRS, bipolar$mean_ISEL)
+cor.test(bipolar$sum_YMRS, bipolar$mean_ISEL, 
+         method = "pearson", alternative = "less")
+?cor.test
+
+ggplot(bipolar, aes(x = sum_YMRS, y = mean_ISEL, color = groups)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+
+
+
 
 
 
