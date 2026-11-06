@@ -258,7 +258,7 @@ t.test(sum_YMRS ~ groups, data = df, var.equal = TRUE, alternative = "less")
 
 library(tidyverse)
 library(psych)
-library(ggplot2)
+# library(ggplot2)
 
 bipolar = read_csv("bipolar.csv")
 rohdaten = read_csv("bipolar.csv")
@@ -285,14 +285,14 @@ bipolar$ISEL_12 = recode(bipolar$ISEL_12, "1" = 4, "2" = 3, "3" = 2, "4" = 1)
 bipolar$mean_ISEL = rowMeans(select(bipolar, starts_with("ISEL")))
 
 
-saveRDS(bipolar, file = "bipolar_clean")
+saveRDS(bipolar, file = "bipolar_clean.rds")
 
 t.test(sum_YMRS ~ groups, data = bipolar)
 
 #?ggplot2
 
 
-jpeg(file = "Unser_erstes_GGPLOT.jpg", width = 15, 
+jpeg(file = "Unser_erstes_ggplot.jpg", width = 15, 
      height = 10, units = "cm", res = 300)
 
 ggplot(data = bipolar, aes(x = groups, y = sum_YMRS, fill = groups)) +
