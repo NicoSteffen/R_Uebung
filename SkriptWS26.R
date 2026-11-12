@@ -261,6 +261,9 @@ library(psych)
 # library(ggplot2)
 
 bipolar = read_csv("bipolar.csv")
+
+
+df = read.csv("bipolar.csv")
 rohdaten = read_csv("bipolar.csv")
 
 # names(bipolar)
@@ -318,7 +321,85 @@ ggplot(bipolar, aes(x = sum_YMRS, y = mean_ISEL, color = groups)) +
 
 
 
+# Einheit 5 ---------------------------------------------------------------
 
+df = read.csv("https://raw.githubusercontent.com/stephangoerigk/WAF_Folien/master/therapy4groups.csv")
+head(df)
+str(df)
+df$Therapy
+df$Diagnosis
+
+summary(df)
+
+df$Therapy = factor(df$Therapy)
+df$Diagnosis = factor(df$Diagnosis)
+
+mod1 = lm(Symptoms ~ Therapy, data = df)
+av = anova(mod1)
+# summary(mod1)
+
+str(av)
+av$Df[2]
+round(av$`F value`[1],2)
+
+library(effectsize)
+interpret_omega_squared(omega_squared(av))
+report::report(av)
+
+# Voraussetzungen 
+
+shapiro.test(df$Symptoms[df$Therapy == "VT"])
+
+by(df$Symptoms, df$Therapy, shapiro.test)
+by(df$Symptoms, df$Therapy, hist)
+
+qqnorm(df$Symptoms[df$Therapy == "VT"])
+qqline(df$Symptoms[df$Therapy == "VT"])
+
+library(car)
+
+leveneTest(Symptoms ~Therapy, data = df, center = "mean")
+
+library(performance)
+
+check_homogeneity(mod1)
+check_model(mod1)
+
+
+library(emmeans)
+
+emmeans = emmeans(mod1, pairwise ~ Therapy)
+emmeans$emmeans
+d = as.data.frame(emmeans$emmeans)
+d$KI = paste0("[", round(d$lower.CL,2),", ", round(d$upper.CL,2), "]")
+d = d[,c("Therapy", "emmean", "SE", "df", "KI")]
+d$emmean = round(d$emmean,2)
+d$SE = round(d$SE,2)
+names(d) = c("Therapieform", "MW", "SE", "df", "95%-KI")
+d$Therapieform = c("Kontrollgruppe", "Psychoanalyse", "SSRI", "Verhaltenstherapie")
+d
+
+library(flextable)
+flextable(d)
+tab1 = theme_apa(flextable(d))
+tab1 = add_header_lines(tab1, values = "Tabelle 3. Symptomschwere nach Therapieende")
+tab1 = align(tab1, i = c(1,2), align = "left", part = "header")
+tab1 = add_footer_lines(tab1, values = "Anmerkung. MW = Mittelwert, SE = Standardfehler, df = Freiheitsgrade, 95%-KI = 95% Konfidenzintervall, SSRI = Selektive Serotonin Reuptake Inhibitor")
+tab1 = font(tab1, fontname = "Times New Roman", part = "all")
+
+
+save_as_docx(tab1, path = "emmeans.docx")
+
+emmeans$contrasts
+
+
+
+
+
+
+
+
+#bold(tab1, i = c(2,3), j = 2, part = "body")
 
 
 
